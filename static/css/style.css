@@ -1,0 +1,39 @@
+.list-group {
+    min-height: 200px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.list-item {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+}
+
+.add-task-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+}
+
+header {
+    border-bottom: 1px solid rgb(175, 175, 175);
+}
+
+.description {
+    white-space: nowrap;
+    overflow: clip;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
