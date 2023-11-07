@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
@@ -13,10 +14,13 @@
     <link rel="stylesheet" href="static/css/style.css">
     <script src="static/js/jquery-3.7.1.min.js"></script>
     <script src="static/js/jquery-ui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
     <title>Orbit Tasks</title>
 </head>
 
 <body>
+
+    <!-- Header -->
     <header
         class="d-flex justify-content-between mb-3 align-items-center navbar navbar-dark navbar-expand-lg sticky-top bg-white">
         <div class="titulo-logo d-flex align-items-center">
@@ -24,41 +28,38 @@
             <h1 class="ms-3">Orbit Tasks</h1>
         </div>
         <div class="justify-content-between column-gap-3 d-none d-md-flex">
-            <div class="input-group align-self-center">
-                <input type="text" class="form-control bg-light" placeholder="Pesquisar">
-                <i class="bi bi-search input-group-text"></i>
-            </div>
             <button class="btn" type="button" aria-label="login" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
                 <i class="bi bi-person-circle fs-1"></i>
             </button>
         </div>
     </header>
+
+    <!-- Main -->
     <main>
+        <div class="container">
+            <div class="card p-3">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Pesquisar..." id="searchInput">
+                    <i class="bi bi-search input-group-text"></i>
+                </div>
+                <button id="toggleCompletedButton" class="btn btn-light align-self-md-end mb-3"
+                    data-showing-completed="true"><i class="bi bi-eye-slash"></i> Esconder tarefas
+                    concluídas</button>
+                <ul class="list-group">
+                    <li class="list-group-item active">
+                        <h2 class="fs-5 mb-0">Tarefas</h2>
+                    </li>
+                    <li class="list-group-item text-center" id="emptyMessage">
+                        Não há tarefas cadastradas.
+                    </li>
+                </ul>
+            </div>
+        </div>
         <div class="container mt-5">
             <div class="row">
-                <div class="col-md-6">
-                    <h2>Tarefas Pendentes</h2>
-                    <ul id="tarefas-pendentes" class="list-group">
-                        <!-- Tarefas pendentes serão adicionadas aqui -->
-                        <div class="list-item">
-                            <div>
-                                <h3 class="fs-6">Titulo</h3>
-                                <p class="m-0 text-secondary description">Descrição Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis maiores, ullam hic dolores doloribus rerum voluptatem amet perspiciatis ab nesciunt repudiandae, labore pariatur animi blanditiis placeat magni veniam repellendus. Iste!</p>
-                            </div>
-                            <div class="d-flex column-gap-2">
-                                <button class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i></button>
-                                <button class="btn btn-danger btn-sm"><i class="bi bi-x"></i></button>
-                            </div>
-                        </div>
-                    </ul>
-                </div>
-                <div class="col-md-6">
-                    <h2>Tarefas Concluídas</h2>
-                    <ul id="tarefas-concluidas" class="list-group">
-                        <!-- Tarefas concluídas serão adicionadas aqui -->
-                    </ul>
-                </div>
+
+
             </div>
         </div>
     </main>
@@ -67,39 +68,44 @@
     <div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
+
+                <!-- Header do modal -->
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="addTaskModalLabel">Adicionar tarefa</h1>
-                    <button type="button" class="btn-close modal-close-button" aria-label="Close" id="addTaskCloseButton"></button>
+                    <h1 class="modal-title fs-5" id="addTaskModalLabel">Adicionar tarefa</h1> <!-- Título -->
+                    <button type="button" class="btn-close modal-close-button" aria-label="Close"
+                        id="addTaskCloseButton"></button> <!-- Botão de fechar -->
                 </div>
+
+                <!-- Formulário para criação de tarefa -->
                 <form id="addTaskForm" novalidate>
                     <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="titleInput" class="form-label">Titulo da tarefa</label>
-                            <input type="text" class="form-control" name="title" id="titleInput" required>
-                            <div class="invalid-feedback">
-                                Por favor, informe um título
-                            </div>
-                        </div>
+
+                        <!-- Descrição da tarefa -->
                         <div class="mb-3">
                             <label for="descriptionInput" class="form-label">Descrição</label>
-                            <input type="text" class="form-control" name="description" id="descriptionInput"
-                                required>
+                            <input type="text" class="form-control" id="descriptionInput" required></input>
                             <div class="invalid-feedback">
-                                Por favor, informe uma descrição
+                                Por favor, informe uma descrição válida.
                             </div>
                         </div>
+
+                        <!-- Data de expiração da tarefa -->
                         <div class="mb-3">
-                            <label for="expirationDate" class="form-label">Data de Expiração</label>
-                            <input type="date" name="date" id="expirationDate" class="form-control" required>
+                            <label for="expirationDateInput" class="form-label">Data de Expiração</label>
+                            <input type="date" class="form-control" id="expirationDateInput" required>
                             <div class="invalid-feedback">
-                                Por favor, informe uma data
+                                Por favor, informe uma data de expiração válida.
                             </div>
                         </div>
+
                     </div>
+
+                    <!-- Botões de fechar e submit -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary modal-close-button">Fechar</button>
                         <button type="submit" class="btn btn-primary">Salvar alterações</button>
                     </div>
+
                 </form>
             </div>
         </div>
@@ -108,48 +114,7 @@
         <i class="bi bi-plus"></i>
     </button>
 
-    <!-- Modal de editar tarefa -->
-    <div class="modal fade" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="editTaskModalLabel">Editar tarefa</h1>
-                    <button type="button" class="btn-close modal-close-button" aria-label="Close" id="editTaskCloseButton"></button>
-                </div>
-                <form id="editTaskForm" novalidate>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="editTitleInput" class="form-label">Titulo da tarefa</label>
-                            <input type="text" class="form-control" name="title" id="editTitleInput" required>
-                            <div class="invalid-feedback">
-                                Por favor, informe um título
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editDescriptionInput" class="form-label">Descrição</label>
-                            <input type="text" class="form-control" name="description" id="editDescriptionInput"
-                                required>
-                            <div class="invalid-feedback">
-                                Por favor, informe uma descrição
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editExpirationDate" class="form-label">Data de Expiração</label>
-                            <input type="date" name="date" id="editExpirationDate" class="form-control" required>
-                            <div class="invalid-feedback">
-                                Por favor, informe uma data
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary modal-close-button">Fechar</button>
-                        <button type="submit" class="btn btn-primary">Salvar alterações</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
+    <!-- Aside de Login -->
     <aside class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
         id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
         <div class="offcanvas-header">
@@ -191,6 +156,20 @@
             </div>
         </div>
     </aside>
+
+    <!-- Success Toast -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <i class="bi bi-check-circle-fill text-success"></i>&nbsp;
+                <strong class="me-auto">Sucesso!</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Uma nova tarefa foi criada com sucesso!
+            </div>
+        </div>
+    </div>
 
     <script src="static/js/script.js"></script>
 </body>
